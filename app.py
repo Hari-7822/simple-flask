@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder='template')
 
@@ -15,7 +14,7 @@ db = SQLAlchemy(app)
 
 class rec(db.Model):
 
-    # id = db.Column("id", db.Integer, primary_key=True)  
+    id = db.Column("id", db.Integer, primary_key=True)  
     name = db.Column("name", db.String(100), nullable = False)
     role = db.Column("role", db.String(80), nullable = False)
 
@@ -53,7 +52,7 @@ def login():
 
         return render_template('login.html.j2')
 
-    return render_template('index.html')
+    return render_template('base.html')
 
 
 
