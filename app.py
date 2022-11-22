@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -14,7 +14,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class rec(db.Model):
-
 
     name = db.Column("user_name", db.String(100), nullable = False)
     phone = db.Column("user_number", db.String(50), nullable = False)
@@ -48,24 +47,30 @@ def reg():
 def login():
 
     if request.method == "POST":
+        session.permanent = True
+
         user = request.form['username']
         passkey = request.form['password']
 
-        chk_name = rec.query.filter_by(userid = user).first()        
-        
-        if not user or not check_password_hash(user.password, passkey):
-            flash('please check your username or password')
-            return "welcome" 
+        session['user'] = user
 
-        return render_template('login.html.j2')
+        flash('Login Successful')
+
+        # chk_name = rec.query.filter_by(userid = user).first()     
+        
+        # if not user or not check_password_hash(user.password, passkey):
+        #     flash('please check your username or password')
+        #     return "welcome" 
+
+        return f'welcome {user}'
 
     return render_template('login.html.j2')
 
 
 
-@app.route('/<usr>')
-def index(usr):
-    return render_template('base.html')
+@app.route('/')
+def index():
+    return 'Welcome'
 
 if __name__ == "__main__":
     db.create_all()
